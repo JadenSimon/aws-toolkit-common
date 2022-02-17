@@ -1,0 +1,23 @@
+================================================================================
+Parse 3 (`stats` with `by`)
+================================================================================
+
+parse @message /user=(?<user2>.*?), method:(?<method2>.*?), latency := (?<latency2>.*?)/ 
+    | stats avg(latency2) by method2, user2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (parse_statement
+    (identifier)
+    (regexp_literal
+      (regexp_pattern)))
+  (stats_statement
+    (by_expression
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier)))
+      (expression_sequence
+        (identifier)
+        (identifier)))))

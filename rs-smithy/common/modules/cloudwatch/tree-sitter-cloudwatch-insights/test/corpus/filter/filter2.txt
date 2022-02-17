@@ -1,0 +1,21 @@
+================================================================================
+Filter 2
+================================================================================
+
+fields f1, f2 | filter (f1=10 or f3>25)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (identifier)
+    (identifier))
+  (filter_statement
+    (parenthesized_expression
+        (binary_expression
+          (binary_expression
+            (identifier)
+            (identifier))
+          (binary_expression
+            (identifier)
+            (identifier))))))

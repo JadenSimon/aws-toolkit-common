@@ -1,0 +1,15 @@
+[package]
+name = "aws-core"
+version = "0.0.1"
+include = ["/src"]
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.16.1", features = ["full"] }
+aws-smithy-process = { path = "../../rust-runtime/aws-smithy-process" }
+
+# Generated deps !!!!
+toolkits = { path = "../../build/smithyprojections/software.amazon.smithy.rust.codegen.toolkits/source/rust-codegen" }
+
+# Async
+async-trait = "0.1.52"

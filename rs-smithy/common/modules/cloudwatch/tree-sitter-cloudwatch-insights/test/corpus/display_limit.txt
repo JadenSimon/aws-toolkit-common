@@ -1,0 +1,17 @@
+================================================================================
+Display with Limit
+================================================================================
+
+sort @timestamp desc | limit 25  |  display f1, f2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (sort_statement
+    (identifier)
+    (sort_order))
+  (limit_statement
+    (number_literal))
+  (display_statement
+    (identifier)
+    (identifier)))

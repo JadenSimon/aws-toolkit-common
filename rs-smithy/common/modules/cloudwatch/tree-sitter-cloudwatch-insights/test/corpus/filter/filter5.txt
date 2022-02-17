@@ -1,0 +1,20 @@
+================================================================================
+Filter 5 (`in` operator)
+================================================================================
+
+fields @timestamp, @message 
+    | filter statusCode in [300,400,500]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (identifier)
+    (identifier))
+  (filter_statement
+    (binary_expression
+      (identifier)
+      (array_literal
+        (number_literal)
+        (number_literal)
+        (number_literal)))))

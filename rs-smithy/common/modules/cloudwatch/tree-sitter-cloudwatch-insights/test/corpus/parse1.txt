@@ -1,0 +1,17 @@
+================================================================================
+Parse 1
+================================================================================
+
+parse @message "[*] * The error was: *" as level, config, exception
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (parse_statement
+    (identifier)
+    (string_literal
+      (string_fragment))
+    (variadic_alias
+      (identifier)
+      (identifier)
+      (identifier))))

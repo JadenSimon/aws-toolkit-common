@@ -1,0 +1,33 @@
+================================================================================
+Filter 8
+================================================================================
+
+filter isIpv4InSubnet(srcAddr, "192.0.2.0/24")
+    | stats sum(bytes) as bytesTransferred by dstAddr
+    | sort bytesTransferred desc
+    | limit 15
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (filter_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (identifier)
+        (string_literal
+          (string_fragment)))))
+  (stats_statement
+    (by_expression
+      (binary_expression
+        (call_expression
+          (identifier)
+          (arguments
+            (identifier)))
+        (identifier))
+      (identifier)))
+  (sort_statement
+    (identifier)
+    (sort_order))
+  (limit_statement
+    (number_literal)))

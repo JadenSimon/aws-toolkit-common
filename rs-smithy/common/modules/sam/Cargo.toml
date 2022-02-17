@@ -1,0 +1,32 @@
+[package]
+name = "aws-sam"
+version = "0.0.1"
+include = ["/src"]
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.16.1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.8" # why did SAM CLI have to mix formats ??
+regex = "1"
+notify = "4.0.17"
+
+# Cross-dependencies
+aws-cloudformation = { path = "../cloudformation" }
+aws-flow = { path = "../flow" }
+aws-core = { path = "../core" }
+
+aws-smithy-process = { path = "../../rust-runtime/aws-smithy-process" }
+
+# SDK
+aws-sdk-s3 = "0.6.0"
+aws-sdk-ecr = "0.6.0"
+aws-sdk-iam = "0.6.0"
+aws-config = "0.6.0"
+
+# Async
+async-trait = "0.1.52"
+
+# Generated deps !!!!
+toolkits = { path = "../../build/smithyprojections/software.amazon.smithy.rust.codegen.toolkits/source/rust-codegen" }

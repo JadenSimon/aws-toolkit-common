@@ -1,0 +1,19 @@
+================================================================================
+Comments 2
+================================================================================
+
+# comment
+stats avg (f1) by f2 # comment
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (stats_statement
+    (by_expression
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier)))
+      (identifier)))
+  (comment))

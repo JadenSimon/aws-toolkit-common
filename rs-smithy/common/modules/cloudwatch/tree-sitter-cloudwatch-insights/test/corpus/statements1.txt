@@ -1,0 +1,30 @@
+================================================================================
+Statements 1
+================================================================================
+
+filter @message like /Exception/ 
+  | stats count() as exceptionCount by bin(1h)
+  | sort exceptionCount desc                
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (filter_statement
+    (binary_expression
+      (identifier)
+      (regexp_literal
+        (regexp_pattern))))
+  (stats_statement
+    (by_expression
+      (binary_expression
+        (call_expression
+          (identifier)
+          (arguments))
+        (identifier))
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier)))))
+  (sort_statement
+    (identifier)
+    (sort_order)))

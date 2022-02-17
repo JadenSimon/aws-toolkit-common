@@ -1,0 +1,16 @@
+================================================================================
+Filter 4 (`not like` operator)
+================================================================================
+
+fields f1 | filter statusCode not like /2\d\d/
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (identifier))
+  (filter_statement
+    (binary_expression
+      (identifier)
+      (regexp_literal
+        (regexp_pattern)))))

@@ -1,0 +1,8 @@
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#>       .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#>             .
+@prefix aws:        <http://www.amazonaws.com/ontology/aws#>            .
+@prefix toolkits:   <http://www.amazonaws.com/ontology/aws-toolkits#>   .
+
+# Base definitions
+toolkits:Feature    rdf:type            rdfs:Class          .
+toolkits:Facet      rdfs:subClassOf     toolkits:Feature    .   # Maybe a Facet is in its own class?

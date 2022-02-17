@@ -1,0 +1,22 @@
+================================================================================
+Filter 6 (`not in` operator)
+================================================================================
+
+fields @timestamp, @message
+    | filter Type not in ["foo","bar",1]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (identifier)
+    (identifier))
+  (filter_statement
+    (binary_expression
+      (identifier)
+      (array_literal
+        (string_literal
+          (string_fragment))
+        (string_literal
+          (string_fragment))
+        (number_literal)))))

@@ -1,0 +1,18 @@
+{
+    "logGroupName": {
+        "name": "Log group name",
+        "resource_type": "string",
+        "description": "The name of the log group.",
+        "required": true
+    },
+    "kmsKeyId": {
+        "name": "KMS Key",
+        "resource_type": "string",
+        "description": "The Amazon Resource Name (ARN) of the CMK to use when encrypting log data. For more information, see Amazon Resource Names - Key Management Service."
+    },
+    "tags": {
+        "name": "Resource Tags",
+        "resource_type": "Tags",
+        "description": "The key-value pairs to use for the tags. CloudWatch Logs doesn’t support IAM policies that prevent users from assigning specified tags to log groups using the aws:Resource/key-name  or aws:TagKeys condition keys. For more information about using tags to control access, see Controlling access to Amazon Web Services resources using tags."   
+    }
+}

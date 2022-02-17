@@ -1,0 +1,21 @@
+{
+    "version": "1.0",
+    "plugins": {
+        "rust-codegen": {
+            "codegen": {
+                "includeFluentClient": false,
+                "renameErrors": false
+            },
+            "runtimeConfig": {
+                "relativePath": "../../../../../rust-runtime/"
+            },
+            "service": "aws.toolkits.flow#FlowService",
+            "module": "toolkits",
+            "moduleVersion": "0.0.1",
+            "moduleAuthors": ["Who knows"],
+            "moduleDescription": "",
+            "moduleRepository": "",
+            "license": "Apache-2.0"
+        }
+    }
+}

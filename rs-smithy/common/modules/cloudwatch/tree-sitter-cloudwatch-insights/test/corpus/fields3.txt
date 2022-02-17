@@ -1,0 +1,19 @@
+================================================================================
+Fields 3 (`concat` with alias)
+================================================================================
+
+fields concat(Operation, '-', StatusCode) as opStatus
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (binary_expression
+      (call_expression
+          (identifier)
+          (arguments
+            (identifier)
+            (string_literal
+              (string_fragment))
+            (identifier)))
+      (identifier))))

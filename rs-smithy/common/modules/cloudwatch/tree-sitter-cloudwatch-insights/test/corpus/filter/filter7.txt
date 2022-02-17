@@ -1,0 +1,29 @@
+================================================================================
+Filter 7 (aliasing `by`)
+================================================================================
+
+filter logStatus="SKIPDATA"
+    | stats count(*) by bin(1mo) as t
+    | sort t
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (filter_statement
+    (binary_expression
+      (identifier)
+      (string_literal
+        (string_fragment))))
+  (stats_statement
+    (binary_expression
+      (by_expression
+        (call_expression
+          (identifier)
+          (arguments))
+        (call_expression
+          (identifier)
+          (arguments
+            (identifier))))
+      (identifier)))
+  (sort_statement
+    (identifier)))

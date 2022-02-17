@@ -1,0 +1,1044 @@
+{
+    "commands": [
+        {
+            "label": "display",
+            "detail": "command display",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Specifies which fields to display in the query results. If you specify this command\n more than once in your query, \n only the fields you specify in the last occurrence are used.\n\nThe following example uses the field `@message` and creates the ephemeral fields `loggingType`\n and `loggingMessage` for use in the query. It filters the events to only those with `ERROR` as the \n value of `loggingType`, but then displays only the `loggingMessage` field of those events in\n the results. \n```\nfields @message\n | parse @message \"[*] *\" as loggingType, loggingMessage\n | filter loggingType = \"ERROR\"\n | display loggingMessage\n```\n"
+            },
+            "kind": 17,
+            "insertText": "display",
+            "sortText": "17-display"
+        },
+        {
+            "label": "fields",
+            "detail": "command fields",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Retrieves the specified fields from log events for display.  You can use functions and operations within a fields command to modify field values\n for display and \n to create new fields for use in the rest of the query.\n\nThe following example displays the fields `foo-bar`, `action`, and the absolute value \n of the difference between `f3` and `f4` for all log events in the log group. \n```\nfields `foo-bar`, action, abs(f3-f4)\n```\n\n The following example creates and displays an ephemeral field `opStatus`. The \n value of `opStatus` for each log entry is the concatenation of the values of\n the `Operation` and `StatusCode` fields, with a hyphen in between \n those values. \n```\nfields concat(Operation, '-', StatusCode) as opStatus\n```\n"
+            },
+            "kind": 17,
+            "insertText": "fields",
+            "sortText": "17-fields"
+        },
+        {
+            "label": "filter",
+            "detail": "command filter",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Filters the results of a query based on one or more conditions. You can use\n a variety of operators and expressions in the `filter`\n command. For \n more information, see \n Matches and Regular Expressions in the Filter Command.\n\nThe following example retrieves the fields `f1`, `f2`, and\n `f3` for all log events with a value over 2000 in\n the `duration` field.\n \n```\nfields f1, f2, f3 | filter (duration>2000)\n```\n The following example also a valid query, but the\n results don't display separate fields. Instead, the results display\n the `@timestamp` and all log data in the `@message` field for all\n log events where duration is more than\n 2000.\n \n```\nfilter (duration>2000)\n```\n The following example retrieves the fields `f1` and `f2` for all\n log events where `f1` is 10 or `f3` is\n more than 25. \n```\nfields f1, f2 | filter (f1=10 or f3>25)\n```\n The next example returns log\n events where the field `statusCode` has a value between\n 200 and 299.\n \n```\nfields f1 | filter statusCode like /2\\d\\d/\n```\n The next example returns log events that includehave a \n `statusCode` of \"300\", \"400\", or \"500\". \n```\nfields @timestamp, @message \n | filter statusCode in [300,400,500]\n```\n \n This final example returns log events that do not \n have `Type` fields with values of \"foo\", \"bar\", or \"1\".\n \n```\nfields @timestamp, @message\n | filter Type not in [\"foo\",\"bar\",1]\n```\n"
+            },
+            "kind": 17,
+            "insertText": "filter",
+            "sortText": "17-filter"
+        },
+        {
+            "label": "stats",
+            "detail": "command stats",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Calculates aggregate statistics based on the values of log fields.\n When you use `stats`, you can also use `by` to specify one or more criteria to use to group data when calculating \n the statistics. \n Several statistical operators are supported, including\n `sum()`, `avg()`,\n `count()`, `min()`, and\n `max()`.\n\nThe following example calculates the average value of `f1` for each unique value of `f2`. \n```\nstats avg (f1) by f2\n```\n"
+            },
+            "kind": 17,
+            "insertText": "stats",
+            "sortText": "17-stats"
+        },
+        {
+            "label": "sort",
+            "detail": "command sort",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Sorts the retrieved log events. Both ascending (`asc`) and descending (`desc`) order are supported.\n\nThe following example sorts the returned events in descending order based on the value\n of `f1`, and displays the fields\n `f1`, `f2`, and `f3`. \n```\nfields f1, f2, f3 | sort f1 desc\n```\n"
+            },
+            "kind": 17,
+            "insertText": "sort",
+            "sortText": "17-sort"
+        },
+        {
+            "label": "limit",
+            "detail": "command limit",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Specifies the number of log events returned by the query.  You can use this to limit the results to a small number to see a small set of relevant\n results. You can also use \n `limit` with a number between 1000 and 10,000 to increase the number of query result rows\n displayed in the console to an amount greater than the default of 1000 rows. \n If you don't specify a limit, the query defaults to displaying \n a maximum of 1000 rows.\n\nThe following example sorts the events in descending\n order based on the value of `@timestamp`, and displays\n the fields `f1` and `f2` for\n the first 25 events by sort order. In this case, the sort order\n is by timestamp starting with the most recent, so the most\n recent 25 events are returned. \n```\nsort @timestamp desc | limit 25 | display f1, f2\n```\n"
+            },
+            "kind": 17,
+            "insertText": "limit",
+            "sortText": "17-limit"
+        },
+        {
+            "label": "parse",
+            "detail": "command parse",
+            "documentation": {
+                "isTrusted": true,
+                "supportThemeIcons": true,
+                "value": "Extracts data from a log field and creates one or more ephemeral fields that you can\n process further in the query. \n `parse` accepts both glob expressions and regular expressions. \n For glob expressions, provide the `parse` command with\n a constant string (characters enclosed in either single or\n double quotation marks) where each variable piece of text is\n replaced with an asterisk (\\*). These are extracted into\n ephemeral fields and given an alias after the `as`\n keyword, in positional order. \n Enclose regular expressions in forward slashes (/). Within the\n expression, each part of the matched string that is to be\n extracted is enclosed in a named capturing group. An example of\n a named capturing group is `(?<name>.*)`, where\n `name` is the name and `.*` is the\n pattern.\n\nUsing this single log line as an example: \n \n```\n25 May 2019 10:24:39,474 [ERROR] {foo=2, bar=data} The error was: DataIntegrityException\n```\n\n The following two `parse` expressions each do the\n following: the ephemeral fields `level`,\n `config`, and `exception` are\n created. `level` has a value of `ERROR`,\n `config` has a value of `{foo=2,\n bar=data}`, and `exception` has a value of\n `DataIntegrityException`. The first example\n uses a glob expression, and the second uses a regular\n expression. \n```\nparse @message \"[*] * The error was: *\" as level, config, exception\n```\n\n \n```\nparse @message /\\[(?<level>\\S+)\\]\\s+(?<config>\\{.*\\})\\s+The error was: (?<exception>\\S+)/\n```\n\n The following example uses a regular expression to extract the ephemeral fields `@user2`, `@method2`,\n and `@latency2` from\n the log field `@message` and returns the average latency for each unique\n combination of `@method2` and `@user2`. \n```\nparse @message /user=(?<user2>.*?), method:(?<method2>.*?), latency := (?<latency2>.*?)/ \n | stats avg(@latency2) by @method2, @user2\n```\n"
+            },
+            "kind": 17,
+            "insertText": "parse",
+            "sortText": "17-parse"
+        }
+    ],
+    "operations": [
+        {
+            "token": "abs",
+            "detail": "numeric operations\n\nabs(a: number): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Absolute value.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "abs(a: number): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "avg",
+            "detail": "stats aggregation functions\n\navg(fieldName: NumericLogField): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "The average of the values in the specified field.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "avg(fieldName: NumericLogField): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: NumericLogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "bin",
+            "detail": "datetime functions\n\nbin(period: Period): Timestamp",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Rounds the value of `@timestamp` to the given period and then truncates.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "bin(period: Period): Timestamp",
+                    "parameters": [
+                        {
+                            "label": "period: Period"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "ceil",
+            "detail": "numeric operations\n\nceil(a: number): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Round to ceiling (the smallest integer that is\n greater than the value of `a`).",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "ceil(a: number): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "coalesce",
+            "detail": "general functions\n\ncoalesce(fieldName: LogField, ...fieldNames: LogField[]): LogField",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the first non-null value from the list.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "coalesce(fieldName: LogField, ...fieldNames: LogField[]): LogField",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        },
+                        {
+                            "label": "...fieldNames: LogField[]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "concat",
+            "detail": "string functions\n\nconcat(str: string, ...strings: string[]): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Concatenates the strings.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "concat(str: string, ...strings: string[]): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "...strings: string[]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "count",
+            "detail": "stats aggregation functions\n\ncount(): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Counts the log events. `count()` (or `count(*)`) counts all events returned by the query, while\n `count(fieldName)` counts all records that include the specified field name.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "count(): number",
+                    "parameters": []
+                },
+                {
+                    "documentation": {
+                        "value": "Counts the log events. `count()` (or `count(*)`) counts all events returned by the query, while\n `count(fieldName)` counts all records that include the specified field name.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "count(fieldName: LogField): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "count_distinct",
+            "detail": "stats aggregation functions\n\ncount_distinct(fieldName: LogField): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the number of unique values for the field. If the field has very high cardinality (contains many unique values), the value returned by `count_distinct` is just an approximation.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "count_distinct(fieldName: LogField): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "dateceil",
+            "detail": "datetime functions\n\ndateceil(timestamp: Timestamp, period: Period): Timestamp",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Rounds up the timestamp to the given period and then truncates. For example, `dateceil(@timestamp, 1h)`\n truncates all values of `@timestamp` to the top of the hour.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "dateceil(timestamp: Timestamp, period: Period): Timestamp",
+                    "parameters": [
+                        {
+                            "label": "timestamp: Timestamp"
+                        },
+                        {
+                            "label": "period: Period"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "datefloor",
+            "detail": "datetime functions\n\ndatefloor(timestamp: Timestamp, period: Period): Timestamp",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Truncates the timestamp to the given period. For example, `datefloor(@timestamp, 1h)`\n truncates all values of `@timestamp` to the bottom of the hour.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "datefloor(timestamp: Timestamp, period: Period): Timestamp",
+                    "parameters": [
+                        {
+                            "label": "timestamp: Timestamp"
+                        },
+                        {
+                            "label": "period: Period"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "earliest",
+            "detail": "stats non-aggregation functions\n\nearliest(fieldName: LogField): LogField",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the value of `fieldName` from the log event\n that has the earliest timestamp in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "earliest(fieldName: LogField): LogField",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "floor",
+            "detail": "numeric operations\n\nfloor(a: number): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Round to floor (the largest integer that is\n smaller than the value of `a`).",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "floor(a: number): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "fromMillis",
+            "detail": "datetime functions\n\nfromMillis(fieldName: number): Timestamp",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Interprets the input field as the number of milliseconds since the Unix epoch and\n converts it to a timestamp.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "fromMillis(fieldName: number): Timestamp",
+                    "parameters": [
+                        {
+                            "label": "fieldName: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "greatest",
+            "detail": "numeric operations\n\ngreatest(a: number, ...numbers: number[]): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the largest value.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "greatest(a: number, ...numbers: number[]): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        },
+                        {
+                            "label": "...numbers: number[]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isblank",
+            "detail": "string functions\n\nisblank(fieldName: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is missing, an empty string, \n or contains only white space.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isblank(fieldName: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isempty",
+            "detail": "string functions\n\nisempty(fieldName: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is missing or is an empty string.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isempty(fieldName: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isIpInSubnet",
+            "detail": "ip address functions\n\nisIpInSubnet(fieldName: string, subnet: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv4 or IPv6\n address within the specified v4 or v6 subnet. When you specify\n the subnet, use CIDR notation such as `192.0.2.0/24`\n or `2001:db8::/32`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isIpInSubnet(fieldName: string, subnet: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        },
+                        {
+                            "label": "subnet: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isIpv4InSubnet",
+            "detail": "ip address functions\n\nisIpv4InSubnet(fieldName: string, subnet: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv4 address\n within the specified v4 subnet. When you specify the subnet, use\n CIDR notation such as `192.0.2.0/24`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isIpv4InSubnet(fieldName: string, subnet: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        },
+                        {
+                            "label": "subnet: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isIpv6InSubnet",
+            "detail": "ip address functions\n\nisIpv6InSubnet(fieldName: string, subnet: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv6 address\n within the specified v6 subnet. When you specify the subnet, use\n CIDR notation such as `2001:db8::/32`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isIpv6InSubnet(fieldName: string, subnet: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        },
+                        {
+                            "label": "subnet: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "ispresent",
+            "detail": "general functions\n\nispresent(fieldName: LogField): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field exists.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "ispresent(fieldName: LogField): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isValidIp",
+            "detail": "ip address functions\n\nisValidIp(fieldName: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv4 or IPv6\n address.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isValidIp(fieldName: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isValidIpV4",
+            "detail": "ip address functions\n\nisValidIpV4(fieldName: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv4\n address.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isValidIpV4(fieldName: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "isValidIpV6",
+            "detail": "ip address functions\n\nisValidIpV6(fieldName: string): boolean",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns `true` if the field is a valid IPv6\n address.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "isValidIpV6(fieldName: string): boolean",
+                    "parameters": [
+                        {
+                            "label": "fieldName: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "latest",
+            "detail": "stats non-aggregation functions\n\nlatest(fieldName: LogField): LogField",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the value of `fieldName` from the log event\n that has the latest timestamp in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "latest(fieldName: LogField): LogField",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "least",
+            "detail": "numeric operations\n\nleast(a: number, ...numbers: number[]): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the smallest value.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "least(a: number, ...numbers: number[]): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        },
+                        {
+                            "label": "...numbers: number[]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "log",
+            "detail": "numeric operations\n\nlog(a: number): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Natural log.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "log(a: number): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "ltrim",
+            "detail": "string functions\n\nltrim(str: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Removes white space from the left of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from the left of `str`.\n For example, `ltrim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"fooxyZ\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "ltrim(str: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                },
+                {
+                    "documentation": {
+                        "value": "Removes white space from the left of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from the left of `str`.\n For example, `ltrim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"fooxyZ\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "ltrim(str: string, subStr: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "subStr: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "max",
+            "detail": "stats aggregation functions\n\nmax(fieldName: LogField): LogFieldValue",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "The maximum of the values for this log field in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "max(fieldName: LogField): LogFieldValue",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "min",
+            "detail": "stats aggregation functions\n\nmin(fieldName: LogField): LogFieldValue",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "The minimum of the values for this log field in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "min(fieldName: LogField): LogFieldValue",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "pct",
+            "detail": "stats aggregation functions\n\npct(fieldName: LogFieldValue, percent: number): LogFieldValue",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "A percentile indicates the relative standing of \n a value in a dataset. For example, \n `pct(@duration, 95)` returns the `@duration`\n value at which 95 percent of the values of `@duration` are lower than this value,\n and 5 percent are higher than this value.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "pct(fieldName: LogFieldValue, percent: number): LogFieldValue",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogFieldValue"
+                        },
+                        {
+                            "label": "percent: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "replace",
+            "detail": "string functions\n\nreplace(str: string, searchValue: string, replaceValue: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Replaces all instances of `searchValue` in\n `str` with `replaceValue`. For example,\n `replace(\"foo\",\"o\",\"0\")` returns\n `\"f00\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "replace(str: string, searchValue: string, replaceValue: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "searchValue: string"
+                        },
+                        {
+                            "label": "replaceValue: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "rtrim",
+            "detail": "string functions\n\nrtrim(str: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Removes white space from the right of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from the right of `str`.\n For example, `rtrim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"xyZfoo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "rtrim(str: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                },
+                {
+                    "documentation": {
+                        "value": "Removes white space from the right of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from the right of `str`.\n For example, `rtrim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"xyZfoo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "rtrim(str: string, subStr: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "subStr: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "sortsFirst",
+            "detail": "stats non-aggregation functions\n\nsortsFirst(fieldName: LogField): LogField",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the value of `fieldName` that sorts first in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "sortsFirst(fieldName: LogField): LogField",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "sortsLast",
+            "detail": "stats non-aggregation functions\n\nsortsLast(fieldName: LogField): LogField",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the value of `fieldName` that sorts last in the queried logs.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "sortsLast(fieldName: LogField): LogField",
+                    "parameters": [
+                        {
+                            "label": "fieldName: LogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "sqrt",
+            "detail": "numeric operations\n\nsqrt(a: number): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Square root.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "sqrt(a: number): number",
+                    "parameters": [
+                        {
+                            "label": "a: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "stddev",
+            "detail": "stats aggregation functions\n\nstddev(fieldName: NumericLogField): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "The standard deviation of the values in the specified field.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "stddev(fieldName: NumericLogField): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: NumericLogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "strcontains",
+            "detail": "string functions\n\nstrcontains(str: string, searchValue: string): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns 1 if `str` contains `searchValue` and 0 otherwise.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "strcontains(str: string, searchValue: string): number",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "searchValue: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "strlen",
+            "detail": "string functions\n\nstrlen(str: string): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns the length of the string in Unicode code points.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "strlen(str: string): number",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "substr",
+            "detail": "string functions\n\nsubstr(str: string, startIndex: number): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Returns a substring from the index specified by the number argument to the end of the string. If the function has a second number argument, it contains the length of\n the \n substring to be retrieved. For example, `substr(\"xyZfooxyZ\",3, 3)` returns `\"foo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "substr(str: string, startIndex: number): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "startIndex: number"
+                        }
+                    ]
+                },
+                {
+                    "documentation": {
+                        "value": "Returns a substring from the index specified by the number argument to the end of the string. If the function has a second number argument, it contains the length of\n the \n substring to be retrieved. For example, `substr(\"xyZfooxyZ\",3, 3)` returns `\"foo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "substr(str: string, startIndex: number, length: number): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "startIndex: number"
+                        },
+                        {
+                            "label": "length: number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "sum",
+            "detail": "stats aggregation functions\n\nsum(fieldName: NumericLogField): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "The sum of the values in the specified field.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "sum(fieldName: NumericLogField): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: NumericLogField"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "tolower",
+            "detail": "string functions\n\ntolower(str: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Converts the string to lowercase.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "tolower(str: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "toMillis",
+            "detail": "datetime functions\n\ntoMillis(fieldName: Timestamp): number",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Converts the timestamp found in the named field into a number representing the milliseconds\n since the Unix epoch.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "toMillis(fieldName: Timestamp): number",
+                    "parameters": [
+                        {
+                            "label": "fieldName: Timestamp"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "toupper",
+            "detail": "string functions\n\ntoupper(str: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Converts the string to uppercase.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "toupper(str: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "token": "trim",
+            "detail": "string functions\n\ntrim(str: string): string",
+            "signatures": [
+                {
+                    "documentation": {
+                        "value": "Removes white space from both ends of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from both sides of `str`.\n For example, `trim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"foo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "trim(str: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        }
+                    ]
+                },
+                {
+                    "documentation": {
+                        "value": "Removes white space from both ends of the string. If the\n function has a second string argument, it removes the characters\n of `subStr` from both sides of `str`.\n For example, `trim(\"xyZfooxyZ\",\"xyZ\")` returns\n `\"foo\"`.",
+                        "isTrusted": true,
+                        "supportThemeIcons": false
+                    },
+                    "label": "trim(str: string, subStr: string): string",
+                    "parameters": [
+                        {
+                            "label": "str: string"
+                        },
+                        {
+                            "label": "subStr: string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

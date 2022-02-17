@@ -1,0 +1,18 @@
+================================================================================
+Fields 2 (`abs` with subtraction)
+================================================================================
+
+fields `foo-bar`, action, abs(f3-f4)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fields_statement
+    (identifier)
+    (identifier)
+    (call_expression
+        (identifier)
+        (arguments
+            (binary_expression
+                (identifier)
+                (identifier))))))
